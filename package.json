@@ -1,0 +1,27 @@
+{
+  "dependencies": {
+    "g": "^2.0.1",
+    "typescript": "^5.1.6"
+  },
+  "name": "bia",
+  "version": "1.0.0",
+  "description": "backend for spotify clone",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/kuuhaku-u/bia.git"
+  },
+  "keywords": [
+    "bia"
+  ],
+  "author": "Kuuhaku",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kuuhaku-u/bia/issues"
+  },
+  "homepage": "https://github.com/kuuhaku-u/bia#readme"
+}
