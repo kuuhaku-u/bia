@@ -1,22 +1,19 @@
-import express, { Application, Router } from 'express';
+import express, { Application } from 'express';
+import TestRoute from './routes/test';
 
 class Server {
-    private app!: Application;
-    private router!: Router;
+  private app: Application;
 
-    constructor() {
-        this.app = express();
-        this.test();
-        this.app.use('/', this.router);
-        this.app.listen(8000, () => console.log('Server running on port 8000'));
-    }
+  constructor() {
+    this.app = express();
+    this.initializeRoutes();
+    this.app.listen(8000, () => console.log('Server running on port 8000'));
+  }
 
-    test() {
-        this.router = express.Router();
-        this.router.get('/test', (req: any, res: any) => {
-            res.send("Test Route");
-        });
-    }
+  private initializeRoutes() {
+    const test = new TestRoute();
+    this.app.use('/', test.getRouter());
+  }
 }
 
 new Server();
