@@ -14,6 +14,7 @@ class Server {
     const test = new TestRoute();
     this.app.use('/', test.getRouter());
   }
+
 }
 
 new Server();
