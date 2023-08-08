@@ -29,6 +29,7 @@ export default class TestRoute {
         const createUser = new users({
           username: username,
           password: password,
+          token
         });
         await createUser.save();
         res.status(200).json(createUser);
@@ -44,8 +45,8 @@ export default class TestRoute {
       async (req: Request, res: Response) => {
         const { username, password } = req.body;
         const token = this.helper.createToken(username);
-        // const createUser = await users.find()
-        res.send({ username, code: 200, status: true });
+        const createUser = await users.find()
+        res.send({ data: createUser, code: 200, status: true });
       },
     );
   }
