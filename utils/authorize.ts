@@ -7,7 +7,7 @@ export default class helperClass {
   public createToken(username: string): string {
     const secret = process.env['JWT_SECRET'] ?? '';
     const accessToken: string =
-      jwt.sign({ username: username }, secret, { expiresIn: '20s' }) ?? '';
+      jwt.sign({ username: username }, secret, { expiresIn: '20m' }) ?? '';
     return accessToken;
   }
 }
