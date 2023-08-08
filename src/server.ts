@@ -1,4 +1,3 @@
-// import { configDotenv } from 'dotenv';
 import dotenv from 'dotenv';
 import express, { Application } from 'express';
 import TestRoute from './routes/test';

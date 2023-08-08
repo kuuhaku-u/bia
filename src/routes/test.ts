@@ -43,7 +43,23 @@ export default class TestRoute {
       '/login',
       this.jwtMiddlewareInstance.auth,
       async (req: Request, res: Response) => {
-        const { username, password } = req.body;
+        const { username, id, password } = req.body;
+        const token = this.helper.createToken(username);
+        const createUser = await users.findById(id)
+        if (createUser?.password == password) {
+          res.send({ code: 200, status: true, user: createUser, msg: "Good" });
+        } else {
+          res.send({ code: 401, status: false, user: {}, msg: "Wrong Password or SOmething IDK" });
+        }
+      },
+    );
+  }
+  private image() {
+    this.router.post(
+      '/image',
+      this.jwtMiddlewareInstance.auth,
+      async (req: Request, res: Response) => {
+        const { username } = req.body;
         const token = this.helper.createToken(username);
         const createUser = await users.find()
         res.send({ data: createUser, code: 200, status: true });
