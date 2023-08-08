@@ -32,7 +32,7 @@ export default class TestRoute {
           token
         });
         await createUser.save();
-        res.status(200).json(createUser);
+        res.status(200).json({ code: 200, msg: "Created Successfully" });
       } catch (err) {
         res.status(500).send(err);
       }
