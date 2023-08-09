@@ -4,6 +4,8 @@ import jwtMiddleware from '../middleware/authJWT';
 import users from '../model/users';
 import multer from 'multer';
 import path from 'path';
+import axios from 'axios';
+import fs from 'fs';
 export default class TestRoute {
   private router: Router;
   private helper!: helperClass;
@@ -19,11 +21,11 @@ export default class TestRoute {
         cb(null, './data');
       },
       filename: (req, file, cb) => {
-        cb(null, `${new Date().toISOString()}_ ${path.extname(file.originalname)}`);
+        // cb(null, `${new Date().toISOString()}_ ${path.extname(file.originalname)}`);
+        cb(null, "1.png");
       },
     });
     this.upload = multer({ storage: this.storage });
-    // const storage
     this.test();
     this.signUp();
     this.logIn();
@@ -59,7 +61,6 @@ export default class TestRoute {
       this.jwtMiddlewareInstance.auth,
       async (req: Request, res: Response) => {
         const { username, id, password } = req.body;
-        const token = this.helper.createToken(username);
         const createUser = await users.findById(id);
         if (createUser?.password == password) {
           res.send({ code: 200, status: true, user: createUser, msg: 'Good' });
@@ -72,11 +73,27 @@ export default class TestRoute {
   private image() {
     this.router.post(
       '/image',
-      this.upload.single('file'),
-      this.jwtMiddlewareInstance.auth,
+      this.upload.single('image'),
+      // this.jwtMiddlewareInstance.auth,
       async (req: Request, res: Response) => {
         const { username } = req.body;
-        res.send({ code: 200, status: true, msg: 'upload' });
+        try {
+          const flaskRes = await axios.post(process.env['BIA_FLASK'] ?? '', { username: username })
+          if (flaskRes.data) {
+            fs.unlink(__dirname.split('/').splice(0, 4).join('/') + '/data/1.png', function (err: any) {
+              if (err) {
+                console.error(err);
+              }
+              console.log('File has been Deleted');
+            });
+          } else {
+            console.log("Something wrong with model api");
+          }
+          res.send({ code: 200, msg: 'upload', prediction: flaskRes.data });
+        } catch (error) {
+          console.error('Error communicating with Flask:', error);
+          res.status(500).send({ code: 500, msg: 'Error communicating with Flask' });
+        }
       },
     );
   }
@@ -84,4 +101,3 @@ export default class TestRoute {
     return this.router;
   }
 }
-
