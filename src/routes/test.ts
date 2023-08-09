@@ -5,6 +5,7 @@ import users from '../model/users';
 import multer from 'multer';
 import path from 'path';
 import axios from 'axios';
+import fs from 'fs';
 export default class TestRoute {
   private router: Router;
   private helper!: helperClass;
@@ -20,7 +21,8 @@ export default class TestRoute {
         cb(null, './data');
       },
       filename: (req, file, cb) => {
-        cb(null, `${new Date().toISOString()}_ ${path.extname(file.originalname)}`);
+        // cb(null, `${new Date().toISOString()}_ ${path.extname(file.originalname)}`);
+        cb(null, "1.png");
       },
     });
     this.upload = multer({ storage: this.storage });
@@ -71,12 +73,22 @@ export default class TestRoute {
   private image() {
     this.router.post(
       '/image',
-      this.upload.single('file'),
+      this.upload.single('image'),
       // this.jwtMiddlewareInstance.auth,
       async (req: Request, res: Response) => {
         const { username } = req.body;
         try {
-          const flaskRes = await axios.post('http://127.0.0.1:5000/', { username: 'username' });
+          const flaskRes = await axios.post(process.env['BIA_FLASK'] ?? '', { username: username })
+          if (flaskRes.data) {
+            fs.unlink(__dirname.split('/').splice(0, 4).join('/') + '/data/1.png', function (err: any) {
+              if (err) {
+                console.error(err);
+              }
+              console.log('File has been Deleted');
+            });
+          } else {
+            console.log("Something wrong with model api");
+          }
           res.send({ code: 200, msg: 'upload', prediction: flaskRes.data });
         } catch (error) {
           console.error('Error communicating with Flask:', error);
@@ -89,4 +101,3 @@ export default class TestRoute {
     return this.router;
   }
 }
-

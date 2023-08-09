@@ -10,13 +10,12 @@ export default class jwtMiddleware {
       const token = authHeader.split(' ')[1];
       jwt.verify(token, accessTokenSecret, (err: any, user: any) => {
         if (err) {
-          return res.sendStatus(403);
+          return res.send({code:403, msg:"Error Processing Token"});
         }
         req.body.username = user;
         next();
       });
     } else {
-      res.sendStatus(401);
-    }
+      res.send({code:401, msg:"Forbidden"})    }
   }
 }
